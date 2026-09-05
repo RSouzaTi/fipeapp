@@ -1,26 +1,16 @@
-import { Button } from "@react-navigation/elements";
+import FipeScreen from "@/components/FipeScreen";
 import { useRouter } from "expo-router";
-import { Text, View } from "react-native";
 
 export default function Index() {
   const router = useRouter();
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "yellow",
-      }}
-    >
-      <Text>Login</Text>
-      <View style={{ flexDirection: "row", gap: 20 }}>
-        <Button onPressIn={() => router.navigate("/register")}>
-          Cadastre-se
-        </Button>
-        <Button onPressIn={() => router.replace("/home")}>Entrar</Button>
-      </View>
-    </View>
-  );
+  const data = [
+    { title: "um" },
+    { title: "dois" },
+    { title: "tres" },
+    { title: "quatro" },
+    { title: "cinco" },
+  ];
+
+  return <FipeScreen data={data} />;
 }
