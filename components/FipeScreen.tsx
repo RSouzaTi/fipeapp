@@ -6,20 +6,24 @@ import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 
 interface IFipeScreen {
-  data: [];
+  data?: IFipeItem[];
+}
+
+interface IFipeItem {
+  nome: string;
 }
 
 export default function FipeScreen({ data }: IFipeScreen) {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
-  const filteredData = data.filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase()),
+  const filteredData = data?.filter((item) =>
+    item?.nome?.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const randerItem = ({ item }) => (
+  const randerItem = ({ item }: { item: IFipeItem }) => (
     <View style={styles.item}>
-      <Text>{item.title}</Text>
+      <Text>{item.nome}</Text>
       <Ionicons name="chevron-forward" size={24} color="black" />
     </View>
   );
