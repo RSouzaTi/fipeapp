@@ -1,32 +1,49 @@
 import { styles } from "@/components/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
-import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
-
-interface IFipeScreen {
-  data?: IFipeItem[];
-}
+import {
+  RefreshControl,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface IFipeItem {
+  codigo: string;
   nome: string;
 }
 
-export default function FipeScreen({ data }: IFipeScreen) {
-  const router = useRouter();
+interface IFipeScreen {
+  data?: IFipeItem[];
+  goNext?: (codigo: string) => void;
+  error?: Error;
+  isLoading?: boolean;
+  update?: () => void;
+}
+
+export default function FipeScreen({
+  data,
+  goNext,
+  error,
+  isLoading,
+  update,
+}: IFipeScreen) {
   const [search, setSearch] = useState("");
 
   const filteredData = data?.filter((item) =>
     item?.nome?.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const randerItem = ({ item }: { item: IFipeItem }) => (
-    <View style={styles.item}>
+  const renderItem = ({ item }: { item: IFipeItem }) => (
+    <TouchableOpacity onPress={() => goNext?.(item.codigo)} style={styles.item}>
       <Text>{item.nome}</Text>
       <Ionicons name="chevron-forward" size={24} color="black" />
-    </View>
+    </TouchableOpacity>
   );
+
+  if (error) return <Text>Error: {error.message}</Text>;
 
   return (
     <View style={{ flex: 1 }}>
@@ -38,8 +55,11 @@ export default function FipeScreen({ data }: IFipeScreen) {
       />
       <FlashList
         style={{ flex: 1 }}
-        data={filteredData}
-        renderItem={randerItem}
+        data={filteredData ?? []}
+        renderItem={renderItem}
+        refreshControl={
+          <RefreshControl refreshing={isLoading ?? false} onRefresh={update} />
+        }
       />
     </View>
   );
